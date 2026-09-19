@@ -11,7 +11,14 @@ const ITEMS = [
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
-          d="M12 3c4.5 0 8 2.5 8 5.5 0 2.2-1.9 4.1-4.6 5M12 3C7.5 3 4 5.5 4 8.5c0 2.2 1.9 4.1 4.6 5M8 21l4-7 4 7"
+          d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
@@ -59,15 +66,6 @@ export function DashboardNav() {
           className="mb-8 flex items-center gap-1.5 px-2 text-xl font-extrabold tracking-tight text-body"
         >
           MineTree
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="text-brand">
-            <path
-              d="M12 3c4.5 0 8 2.5 8 5.5 0 2.2-1.9 4.1-4.6 5M12 3C7.5 3 4 5.5 4 8.5c0 2.2 1.9 4.1 4.6 5M8 21l4-7 4 7"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </Link>
 
         <nav className="flex flex-col gap-1">
@@ -89,7 +87,7 @@ export function DashboardNav() {
         </nav>
 
         <div className="mt-auto px-2 text-xs text-faint">
-          MineTree · your links, one page
+          MineTree
         </div>
       </aside>
 

@@ -79,7 +79,7 @@ export function TreeContent({
       <div className="mt-8 flex w-full flex-col gap-3 max-sm:gap-3.5">
         {visible.length === 0 ? (
           <p className="mt-6 text-center text-sm opacity-60">
-            No links here yet.
+            Nothing Here, Add It🗿
           </p>
         ) : (
           visible.map((link) =>

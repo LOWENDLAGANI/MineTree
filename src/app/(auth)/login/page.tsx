@@ -23,7 +23,7 @@ export default async function LoginPage({
         Welcome back
       </h1>
       <p className="mt-2 text-center text-sm text-zinc-500">
-        Log in to your MineTree
+        Log in
       </p>
 
       {errorText ? (

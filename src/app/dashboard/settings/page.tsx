@@ -10,7 +10,6 @@ import { saveProfile, uploadAvatar } from "../actions";
 import { ThemeEditor } from "@/components/theme-editor";
 import { StatusBanner } from "@/components/status-banner";
 import { resolveTheme } from "@/lib/themes";
-import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata = { title: "Settings" };
 
@@ -20,7 +19,6 @@ export default async function SettingsPage({
   searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
   const { saved, error } = await searchParams;
-  const siteHost = new URL(getSiteUrl()).host;
   const user = await requireUser();
   const supabase = await createClient();
 
@@ -56,7 +54,7 @@ export default async function SettingsPage({
             target="_blank"
             className="font-medium text-brand-strong hover:underline"
           >
-            {siteHost}/{profile.username}
+            /{profile.username}
           </Link>
         </p>
       </div>
@@ -121,7 +119,7 @@ export default async function SettingsPage({
               <Label htmlFor="username">Username (your page URL)</Label>
               <div className="mt-1.5 flex items-center gap-2">
                 <span className="whitespace-nowrap text-sm text-muted">
-                  {siteHost}/
+                  /
                 </span>
                 <Input
                   id="username"
@@ -144,7 +142,7 @@ export default async function SettingsPage({
               defaultValue={profile.bio}
               maxLength={400}
               rows={3}
-              placeholder="Tell visitors who you are…"
+              placeholder="Who r u?"
               className="mt-1.5"
             />
           </div>

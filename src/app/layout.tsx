@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   // Required so OpenGraph/Twitter URLs resolve absolutely in production.
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "MineTree — one page for everything you are",
+    default: "MineTree",
     template: "%s · MineTree",
   },
   description:
-    "MineTree is the ad-free link-in-bio platform. One sleek page for every link you share.",
+    "Create your page and share all of your links in one place.",
   openGraph: {
     siteName: "MineTree",
     type: "website",

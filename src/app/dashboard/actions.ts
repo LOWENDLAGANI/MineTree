@@ -103,7 +103,7 @@ export async function createLink(formData: FormData): Promise<ActionResult> {
     is_active: true,
   });
 
-  if (error) return { ok: false, message: "Couldn't add the link — try again." };
+  if (error) return { ok: false, message: "Couldn't add the link. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -151,7 +151,7 @@ export async function updateLink(formData: FormData): Promise<ActionResult> {
     .eq("id", id)
     .eq("profile_id", profileId);
 
-  if (error) return { ok: false, message: "Couldn't save changes — try again." };
+  if (error) return { ok: false, message: "Couldn't save changes. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -178,7 +178,7 @@ export async function toggleLink(formData: FormData): Promise<ActionResult> {
     .eq("id", id)
     .eq("profile_id", profileId);
 
-  if (error) return { ok: false, message: "Couldn't update visibility — try again." };
+  if (error) return { ok: false, message: "Couldn't update visibility. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -198,7 +198,7 @@ export async function deleteLink(formData: FormData): Promise<ActionResult> {
   if (!id) return { ok: false, message: "Missing link id." };
 
   const { error } = await supabase.from("links").delete().eq("id", id).eq("profile_id", profileId);
-  if (error) return { ok: false, message: "Couldn't delete the link — try again." };
+  if (error) return { ok: false, message: "Couldn't delete the link. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -225,7 +225,7 @@ export async function reorderLinksAction(linkIds: string[]): Promise<ActionResul
   const { error } = await supabase.rpc("reorder_links", { p_order: linkIds });
   if (error) {
     console.error("[reorder]", error.message);
-    return { ok: false, message: "Reorder didn't save — try dragging again." };
+    return { ok: false, message: "Reorder didn't save. Try dragging again." };
   }
 
   const { data: profile } = await supabase
@@ -306,7 +306,7 @@ export async function saveTheme(theme: {
 }): Promise<ActionResult> {
   const supabase = await createClient();
   const user = await getUserOrNull();
-  if (!user) return { ok: false, message: "You're signed out — log in again." };
+  if (!user) return { ok: false, message: "You're signed out. Log in again." };
 
   const clean = {
     preset: typeof theme.preset === "string" ? theme.preset.slice(0, 32) : undefined,
@@ -330,7 +330,7 @@ export async function saveTheme(theme: {
     .update({ theme_config: clean })
     .eq("id", user.id);
 
-  if (error) return { ok: false, message: "Couldn't save your theme — try again." };
+  if (error) return { ok: false, message: "Couldn't save your theme. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -414,7 +414,7 @@ export async function uploadLinkThumbnail(formData: FormData): Promise<ActionRes
     return { ok: false, message: "Choose an image first." };
   }
   if (file.size > 3 * 1024 * 1024) {
-    return { ok: false, message: "Image is too large — 3 MB max." };
+    return { ok: false, message: "Image is too large. 3 MB max." };
   }
   if (!ALLOWED_THUMB_MIME.has(file.type)) {
     return { ok: false, message: "Only PNG, JPEG or WebP images are allowed." };
@@ -437,7 +437,7 @@ export async function uploadLinkThumbnail(formData: FormData): Promise<ActionRes
     .upload(path, file, { upsert: true, contentType: file.type });
   if (upErr) {
     console.error("[uploadLinkThumbnail]", upErr.message);
-    return { ok: false, message: "Upload failed — check that the 'thumbnails' storage bucket exists and is public." };
+    return { ok: false, message: "Upload failed. Check that the 'thumbnails' storage bucket exists and is public." };
   }
 
   const { data } = supabase.storage.from("thumbnails").getPublicUrl(path);
@@ -449,7 +449,7 @@ export async function uploadLinkThumbnail(formData: FormData): Promise<ActionRes
     .eq("id", linkId)
     .eq("profile_id", profileId);
 
-  if (updateErr) return { ok: false, message: "Couldn't attach the image — try again." };
+  if (updateErr) return { ok: false, message: "Couldn't attach the image. Try again." };
 
   const { data: profile } = await supabase
     .from("profiles")

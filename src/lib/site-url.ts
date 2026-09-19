@@ -2,19 +2,20 @@
  * Canonical public origin of the app.
  *
  * Resolution order (first match wins):
- * 1. NEXT_PUBLIC_SITE_URL  — set this in Vercel env vars (e.g.
- *    https://minetallest-minetree.vercel.app) so preview + production URLs
- *    are deterministic.
- * 2. VERCEL_URL            — auto-provided by Vercel per deployment
- *    (e.g. my-app-git-branch-team.vercel.app).
- * 3. http://localhost:3000 — local development.
+ * 1. NEXT_PUBLIC_SITE_URL  — set this in Vercel env vars so preview +
+ *    production URLs are deterministic.
+ * 2. VERCEL_URL            — auto-provided by Vercel per deployment.
+ * 3. Production build      — the deployed domain, hardcoded below.
+ * 4. http://localhost:3000 — local development.
  *
- * NOTE: the OAuth/confirm flow uses requestSiteOrigin() instead (headers-based),
- * because emails must redirect back to the exact host the user clicked from —
- * which on Vercel equals the deployment URL this helper resolves anyway.
+ * The username part of public URLs (/username) is appended per user at
+ * render time — each user's QR code and share button encode their own page.
  */
 
-const FALLBACK = "http://localhost:3000";
+const LOCAL_FALLBACK = "http://localhost:3000";
+
+/** Production domain — used when NEXT_PUBLIC_SITE_URL is not configured. */
+const PROD_FALLBACK = "https://minetallest-minetree.vercel.app";
 
 function normalize(raw: string): string {
   const value = raw.trim().replace(/\/+$/, "");
@@ -28,7 +29,8 @@ export function getSiteUrl(): string {
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl) return normalize(vercelUrl);
 
-  return FALLBACK;
+  // Production builds default to the deployed domain; local dev stays localhost.
+  return process.env.NODE_ENV === "production" ? PROD_FALLBACK : LOCAL_FALLBACK;
 }
 
 /** Builds an absolute URL for a path on the canonical origin, e.g. /username. */

@@ -62,16 +62,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex animate-fade-in-up items-center gap-2" style={{ animationDelay: "60ms" }}>
           <span className="hidden items-center gap-2 rounded-full border border-edge bg-surface-2 px-3.5 py-2 text-sm text-muted sm:inline-flex">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-brand">
-              <path
-                d="M12 3c4.5 0 8 2.5 8 5.5 0 2.2-1.9 4.1-4.6 5M12 3C7.5 3 4 5.5 4 8.5c0 2.2 1.9 4.1 4.6 5M8 21l4-7 4 7"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {new URL(publicUrl).host}/{profile.username}
+            /{profile.username}
           </span>
           <CopyUrlButton url={publicUrl} />
           <QrButton url={publicUrl} />

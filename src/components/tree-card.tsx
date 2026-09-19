@@ -42,7 +42,7 @@ export function TreeCard({
       toast.success("Public URL copied to clipboard.");
     } catch (err) {
       if ((err as DOMException)?.name === "AbortError") return;
-      toast.error("Couldn't share — try copying the URL instead.");
+      toast.error("Couldn't share. Try copying the URL instead.");
     }
   }
 

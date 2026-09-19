@@ -11,7 +11,7 @@ const MESSAGES: Record<string, string> = {
   file: "Choose a file first.",
   toobig: "Images must be under 2 MB.",
   type: "Only PNG, JPG, WEBP, or GIF allowed.",
-  upload: "Upload failed — check the storage bucket exists.",
+  upload: "Upload failed. Check the storage bucket exists.",
 };
 
 /**

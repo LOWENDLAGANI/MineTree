@@ -326,7 +326,7 @@ export function ThemeEditor({
             </span>
           ) : saveState === "error" ? (
             <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-600 dark:text-red-300">
-              Save failed — try again
+              Save failed. Try again
             </span>
           ) : (
             <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-edge bg-surface-2/60 px-3 py-1 text-xs text-muted">

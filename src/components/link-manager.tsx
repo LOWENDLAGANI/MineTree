@@ -134,10 +134,7 @@ export function LinkManager({
                   />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-body">Your tree is empty</p>
-              <p className="mt-1 text-sm text-muted">
-                Add your first link above and it appears on your public page instantly.
-              </p>
+              <p className="text-sm font-medium text-body">Nothing Here, Add It🗿</p>
             </div>
           ) : (
             <ul className="stagger space-y-3" aria-label="Your links">
@@ -218,7 +215,7 @@ function AddLinkForm({ createAction }: { createAction: FormAction }) {
             toast.error(res?.message ?? "Couldn't add the link.");
           }
         } catch {
-          toast.error("Something went wrong — try again.");
+          toast.error("Something went wrong. Try again.");
         } finally {
           setIsPending(false);
         }
@@ -363,7 +360,7 @@ function SortableLinkRow({
       }
     } catch {
       setOptimisticActive(!checked); // roll back
-      toast.update(loadingId, { kind: "error", message: "Network error — try again." });
+      toast.update(loadingId, { kind: "error", message: "Network error. Try again." });
     } finally {
       setIsToggling(false);
     }
@@ -503,7 +500,7 @@ function EditForm({
       if (res?.ok) toast.success(res.message ?? "Thumbnail updated.");
       else toast.error(res?.message ?? "Upload failed.");
     } catch {
-      toast.error("Something went wrong — try again.");
+      toast.error("Something went wrong. Try again.");
     } finally {
       setThumbUploading(false);
     }
@@ -519,7 +516,7 @@ function EditForm({
           if (res?.ok) toast.success(res.message ?? "Changes saved.");
           else toast.error(res?.message ?? "Couldn't save changes.");
         } catch {
-          toast.error("Something went wrong — try again.");
+          toast.error("Something went wrong. Try again.");
         } finally {
           setIsPending(null);
         }
@@ -678,7 +675,7 @@ function EditForm({
                     toast.error(res?.message ?? "Couldn't delete the link.");
                   }
                 } catch {
-                  toast.error("Something went wrong — try again.");
+                  toast.error("Something went wrong. Try again.");
                 } finally {
                   setIsPending(null);
                   onConfirmDeleteChange(false);

@@ -4,13 +4,12 @@ import { Label } from "@/components/ui/label";
 import { claimUsername } from "../actions";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
-import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata = { title: "Claim your username" };
 
 const ERRORS: Record<string, string> = {
   username: "Usernames are 3–24 chars: lowercase letters, numbers, hyphens.",
-  taken: "That username is already growing elsewhere. Try another.",
+  taken: "Already Taken",
   save: "Something went wrong saving. Try again.",
 };
 
@@ -20,7 +19,6 @@ export default async function ClaimPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
-  const host = new URL(getSiteUrl()).host;
   const user = await requireUser();
   const supabase = await createClient();
 
@@ -35,15 +33,15 @@ export default async function ClaimPage({
       <div className="w-full max-w-md rounded-lg border border-edge bg-surface p-6">
         <h1 className="text-2xl font-bold text-body">Claim your username</h1>
         <p className="mt-1 text-sm text-muted">
-          Your page will live at{" "}
-          <span className="font-mono text-brand-strong">{host}/…</span>
+          Your Page Is Located At{" "}
+          <span className="font-mono text-brand-strong">/…</span>
         </p>
 
         <form action={claimUsername} className="mt-6 space-y-4">
           <div>
             <Label htmlFor="username">Username</Label>
             <div className="mt-1.5 flex items-center gap-2">
-              <span className="text-sm text-muted">{host}/</span>
+              <span className="text-sm text-muted">/</span>
               <Input
                 id="username"
                 name="username"

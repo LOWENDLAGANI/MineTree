@@ -27,7 +27,7 @@ export function CopyUrlButton({ url }: { url: string }) {
       toast.success("Public URL copied to clipboard.");
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      toast.error("Couldn't copy — your browser blocked clipboard access.");
+      toast.error("Couldn't copy. Your browser blocked clipboard access.");
     }
   }
 
