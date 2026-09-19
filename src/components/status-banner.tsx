@@ -54,8 +54,8 @@ export function StatusBanner({ saved, error }: { saved?: string; error?: string 
       className={cn(
         "animate-fade-in-up flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm",
         hasSaved
-          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-          : "border-red-500/30 bg-red-500/10 text-red-300",
+          ? "border-brand/30 bg-brand/10 text-brand-strong"
+          : "border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-300",
       )}
     >
       {hasSaved ? (

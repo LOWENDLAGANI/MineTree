@@ -11,11 +11,35 @@ export type ResolvedTheme = {
   buttonStyle: NonNullable<ThemeConfig["buttonStyle"]>;
   font: NonNullable<ThemeConfig["font"]>;
   fontFamily: string;
+  cornerStyle: NonNullable<ThemeConfig["cornerStyle"]>;
+  avatarShape: NonNullable<ThemeConfig["avatarShape"]>;
+  hideBranding: boolean;
+};
+
+export const CORNER_RADII: Record<NonNullable<ThemeConfig["cornerStyle"]>, string> = {
+  rounded: "0.75rem",
+  pill: "9999px",
+  square: "0.125rem",
+};
+
+export const AVATAR_RADII: Record<NonNullable<ThemeConfig["avatarShape"]>, string> = {
+  circle: "9999px",
+  squircle: "1.5rem",
+  square: "0.25rem",
 };
 
 export const THEME_PRESETS: Record<
   string,
-  Omit<ResolvedTheme, "preset" | "buttonStyle" | "font" | "fontFamily">
+  Omit<
+    ResolvedTheme,
+    | "preset"
+    | "buttonStyle"
+    | "font"
+    | "fontFamily"
+    | "cornerStyle"
+    | "avatarShape"
+    | "hideBranding"
+  >
 > = {
   mint: {
     background: "linear-gradient(160deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%)",
@@ -75,6 +99,9 @@ export function resolveTheme(config: Json | null | undefined): ResolvedTheme {
     background: typeof raw.background === "string" ? raw.background : undefined,
     buttonStyle: typeof raw.buttonStyle === "string" ? (raw.buttonStyle as ThemeConfig["buttonStyle"]) : undefined,
     font: typeof raw.font === "string" ? (raw.font as ThemeConfig["font"]) : undefined,
+    cornerStyle: typeof raw.cornerStyle === "string" ? (raw.cornerStyle as ThemeConfig["cornerStyle"]) : undefined,
+    avatarShape: typeof raw.avatarShape === "string" ? (raw.avatarShape as ThemeConfig["avatarShape"]) : undefined,
+    hideBranding: raw.hideBranding === true,
   };
   const presetKey = cfg.preset && cfg.preset in THEME_PRESETS ? cfg.preset : "mint";
   const base = THEME_PRESETS[presetKey];
@@ -87,5 +114,8 @@ export function resolveTheme(config: Json | null | undefined): ResolvedTheme {
     buttonStyle: cfg.buttonStyle ?? "solid",
     font: cfg.font ?? "sans",
     fontFamily: FONT_STACKS[cfg.font ?? "sans"],
+    cornerStyle: cfg.cornerStyle ?? "rounded",
+    avatarShape: cfg.avatarShape ?? "circle",
+    hideBranding: cfg.hideBranding ?? false,
   };
 }

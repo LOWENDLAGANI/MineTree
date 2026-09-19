@@ -1,7 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { GoogleIcon } from "@/components/google-icon";
 import { submitSignup, signInWithGoogle } from "../actions";
 
@@ -12,17 +9,7 @@ const ERRORS: Record<string, string> = {
   exists: "An account with that email already exists. Log in instead.",
 };
 
-export default function SignupPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string; check?: string }>;
-}) {
-  return (
-    <SignupForm searchParams={searchParams} />
-  );
-}
-
-async function SignupForm({
+export default async function SignupPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; check?: string }>;
@@ -32,48 +19,60 @@ async function SignupForm({
 
   if (check) {
     return (
-      <>
-        <h1 className="text-2xl font-bold text-white">Check your inbox</h1>
-        <p className="mt-2 text-sm text-zinc-400">
+      <div className="animate-fade-in-up text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          Check your inbox
+        </h1>
+        <p className="mt-3 text-sm text-zinc-500">
           We sent you a confirmation link. Open it to activate your account,
           then log in.
         </p>
-        <Link href="/login" className="mt-6 block">
-          <Button variant="outline" className="w-full">Back to log in</Button>
+        <Link
+          href="/login"
+          className="mt-6 inline-block w-full rounded-full bg-emerald-600 py-3.5 text-base font-bold text-white transition-transform hover:bg-emerald-500 active:scale-[0.98]"
+        >
+          Back to log in
         </Link>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <h1 className="text-2xl font-bold text-white">Sign up</h1>
-      <p className="mt-1 text-sm text-zinc-400">
+    <div className="animate-fade-in-up">
+      <h1 className="text-center text-4xl font-extrabold tracking-tight text-zinc-900">
+        Join MineTree
+      </h1>
+      <p className="mt-2 text-center text-sm text-zinc-500">
         Free. Takes about a minute.
       </p>
 
       {errorText ? (
-        <p className="mt-4 rounded border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+        <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-center text-sm text-red-600">
           {errorText}
         </p>
       ) : null}
 
-      <form action={submitSignup} className="mt-6 space-y-4">
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
+      <form action={submitSignup} className="mt-8 space-y-3">
+        <div className="rounded-2xl border-2 border-zinc-900 px-4 py-2.5 transition-shadow focus-within:shadow-[4px_4px_0_0_#0a0a0a]">
+          <label htmlFor="email" className="block text-[11px] font-medium text-zinc-500">
+            Email
+          </label>
+          <input
             id="email"
             name="email"
             type="email"
             autoComplete="email"
             required
             placeholder="you@example.com"
-            className="mt-1.5"
+            className="block w-full border-0 bg-transparent p-0 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
           />
         </div>
-        <div>
-          <Label htmlFor="password">Password</Label>
-          <Input
+
+        <div className="rounded-2xl border-2 border-zinc-900 px-4 py-2.5 transition-shadow focus-within:shadow-[4px_4px_0_0_#0a0a0a]">
+          <label htmlFor="password" className="block text-[11px] font-medium text-zinc-500">
+            Password
+          </label>
+          <input
             id="password"
             name="password"
             type="password"
@@ -81,38 +80,44 @@ async function SignupForm({
             required
             minLength={8}
             placeholder="At least 8 characters"
-            className="mt-1.5"
+            className="block w-full border-0 bg-transparent p-0 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
           />
         </div>
 
-        <Button type="submit" className="w-full">
+        <button
+          type="submit"
+          className="w-full rounded-full bg-emerald-600 py-3.5 text-base font-bold text-white transition-transform hover:bg-emerald-500 active:scale-[0.98]"
+        >
           Create account
-        </Button>
+        </button>
 
-        <p className="text-xs text-zinc-500">
+        <p className="text-center text-xs text-zinc-400">
           By signing up you agree to be excellent to each other.
         </p>
       </form>
 
-      <div className="my-5 flex items-center gap-3 text-xs text-zinc-500">
-        <span className="h-px flex-1 bg-zinc-700" />
-        or
-        <span className="h-px flex-1 bg-zinc-700" />
+      <div className="my-6 flex items-center gap-3 text-xs font-medium text-zinc-400">
+        <span className="h-px flex-1 bg-zinc-200" />
+        OR
+        <span className="h-px flex-1 bg-zinc-200" />
       </div>
 
       <form action={signInWithGoogle}>
-        <Button type="submit" variant="outline" className="w-full">
-          <GoogleIcon className="h-4 w-4" />
+        <button
+          type="submit"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-zinc-300 py-3.5 text-base font-bold text-zinc-900 transition-colors hover:bg-zinc-50 active:scale-[0.98]"
+        >
+          <GoogleIcon className="h-5 w-5" />
           Continue with Google
-        </Button>
+        </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-zinc-400">
+      <p className="mt-8 text-center text-sm text-zinc-600">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-emerald-400 hover:text-emerald-300">
+        <Link href="/login" className="font-bold text-zinc-900 underline decoration-emerald-500 decoration-2 underline-offset-2 hover:text-emerald-600">
           Log in
         </Link>
       </p>
-    </>
+    </div>
   );
 }

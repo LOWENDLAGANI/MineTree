@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import type { ThemeConfig } from "@/lib/database.types";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
 import { resolveTheme, THEME_PRESETS } from "@/lib/themes";
 import { saveTheme } from "@/app/dashboard/actions";
@@ -15,6 +16,9 @@ type ThemeDraft = {
   background?: string;
   buttonStyle?: ThemeConfig["buttonStyle"];
   font?: ThemeConfig["font"];
+  cornerStyle?: ThemeConfig["cornerStyle"];
+  avatarShape?: ThemeConfig["avatarShape"];
+  hideBranding?: boolean;
 };
 
 const PRESET_CARDS: { key: NonNullable<ThemeConfig["preset"]>; name: string; swatch: string }[] = [
@@ -27,6 +31,8 @@ const PRESET_CARDS: { key: NonNullable<ThemeConfig["preset"]>; name: string; swa
 
 const FONTS = ["sans", "serif", "mono"] as const;
 const BUTTON_STYLES = ["solid", "outline", "soft"] as const;
+const CORNER_STYLES = ["rounded", "pill", "square"] as const;
+const AVATAR_SHAPES = ["circle", "squircle", "square"] as const;
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -99,8 +105,8 @@ export function ThemeEditor({
                 onClick={() => patch({ preset: p.key, accent: undefined, background: undefined })}
                 className={
                   draft.preset === p.key || (!draft.preset && p.key === "mint")
-                    ? "rounded-lg border border-emerald-500 bg-emerald-500/10 px-4 py-2 text-sm font-medium transition-all active:scale-95"
-                    : "rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition-all hover:-translate-y-0.5 hover:border-zinc-500 active:scale-95"
+                    ? "rounded-lg border border-brand bg-brand/10 px-4 py-2 text-sm font-medium text-body transition-all active:scale-95"
+                    : "rounded-lg border border-edge px-4 py-2 text-sm text-muted transition-all hover:-translate-y-0.5 hover:border-faint hover:text-body active:scale-95"
                 }
               >
                 <span
@@ -122,9 +128,9 @@ export function ThemeEditor({
               type="color"
               value={draft.accent ?? theme.accent}
               onChange={(e) => patch({ accent: e.target.value })}
-              className="h-10 w-14 cursor-pointer rounded-lg border border-zinc-700 bg-zinc-900"
+              className="h-10 w-14 cursor-pointer rounded-lg border border-edge bg-surface"
             />
-            <span className="font-mono text-sm text-zinc-400">
+            <span className="font-mono text-sm text-muted">
               {draft.accent ?? theme.accent}
             </span>
             {draft.accent ? (
@@ -138,11 +144,11 @@ export function ThemeEditor({
         {/* Background color / gradient */}
         <div>
           <Label htmlFor="background">Background</Label>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-muted">
             Pick a solid color, or blend your accent into a gradient.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3">
-            <label className="relative inline-flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-500">
+            <label className="relative inline-flex cursor-pointer items-center gap-2 rounded-lg border border-edge bg-surface px-3 py-2 text-sm text-muted transition-colors hover:border-faint hover:text-body">
               <span
                 className="h-5 w-5 rounded border border-white/20"
                 style={{ background: draft.background ?? theme.background }}
@@ -190,8 +196,8 @@ export function ThemeEditor({
                 onClick={() => patch({ buttonStyle: s })}
                 className={
                   theme.buttonStyle === s
-                    ? "rounded-lg border border-emerald-500 bg-emerald-500/10 px-4 py-2 text-sm font-medium capitalize transition-all active:scale-95"
-                    : "rounded-lg border border-zinc-700 px-4 py-2 text-sm capitalize text-zinc-300 transition-all hover:-translate-y-0.5 hover:border-zinc-500 active:scale-95"
+                    ? "rounded-lg border border-brand bg-brand/10 px-4 py-2 text-sm font-medium capitalize text-body transition-all active:scale-95"
+                    : "rounded-lg border border-edge px-4 py-2 text-sm capitalize text-muted transition-all hover:-translate-y-0.5 hover:border-faint hover:text-body active:scale-95"
                 }
               >
                 {s}
@@ -211,8 +217,8 @@ export function ThemeEditor({
                 onClick={() => patch({ font: f })}
                 className={
                   theme.font === f
-                    ? "rounded-lg border border-emerald-500 bg-emerald-500/10 px-4 py-2 text-sm font-medium capitalize transition-all active:scale-95"
-                    : "rounded-lg border border-zinc-700 px-4 py-2 text-sm capitalize text-zinc-300 transition-all hover:-translate-y-0.5 hover:border-zinc-500 active:scale-95"
+                    ? "rounded-lg border border-brand bg-brand/10 px-4 py-2 text-sm font-medium capitalize text-body transition-all active:scale-95"
+                    : "rounded-lg border border-edge px-4 py-2 text-sm capitalize text-muted transition-all hover:-translate-y-0.5 hover:border-faint hover:text-body active:scale-95"
                 }
               >
                 {f}
@@ -221,10 +227,83 @@ export function ThemeEditor({
           </div>
         </div>
 
+        {/* Link corner shape */}
+        <div>
+          <Label>Link shape</Label>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {CORNER_STYLES.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => patch({ cornerStyle: s })}
+                className={
+                  theme.cornerStyle === s
+                    ? "rounded-lg border border-brand bg-brand/10 px-4 py-2 text-sm font-medium capitalize text-body transition-all active:scale-95"
+                    : "rounded-lg border border-edge px-4 py-2 text-sm capitalize text-muted transition-all hover:-translate-y-0.5 hover:border-faint hover:text-body active:scale-95"
+                }
+              >
+                <span
+                  className="mr-2 inline-block h-3 w-5 border-2 border-current"
+                  style={{
+                    borderRadius:
+                      s === "pill" ? "9999px" : s === "square" ? "2px" : "6px",
+                  }}
+                />
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Avatar shape */}
+        <div>
+          <Label>Avatar shape</Label>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {AVATAR_SHAPES.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => patch({ avatarShape: s })}
+                className={
+                  theme.avatarShape === s
+                    ? "rounded-lg border border-brand bg-brand/10 px-4 py-2 text-sm font-medium capitalize text-body transition-all active:scale-95"
+                    : "rounded-lg border border-edge px-4 py-2 text-sm capitalize text-muted transition-all hover:-translate-y-0.5 hover:border-faint hover:text-body active:scale-95"
+                }
+              >
+                <span
+                  className="mr-2 inline-block h-4 w-4 bg-current"
+                  style={{
+                    borderRadius:
+                      s === "circle" ? "9999px" : s === "squircle" ? "6px" : "2px",
+                  }}
+                />
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Hide branding */}
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-edge bg-surface-2/60 p-4">
+          <div>
+            <Label htmlFor="hide-branding" className="cursor-pointer">
+              Hide “MineTree” footer
+            </Label>
+            <p className="mt-0.5 text-xs text-muted">
+              Remove the branding link from the bottom of your public page.
+            </p>
+          </div>
+          <Switch
+            id="hide-branding"
+            checked={draft.hideBranding ?? false}
+            onCheckedChange={(v) => patch({ hideBranding: v })}
+          />
+        </div>
+
         {/* Save status pill */}
         <div className="flex items-center gap-2" aria-live="polite">
           {saveState === "saving" ? (
-            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs text-zinc-300">
+            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-edge bg-surface px-3 py-1 text-xs text-muted">
               <svg className="animate-spin text-emerald-400" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="3" />
                 <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
@@ -232,7 +311,7 @@ export function ThemeEditor({
               Saving…
             </span>
           ) : saveState === "saved" ? (
-            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-medium text-brand-strong">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden className="text-emerald-400">
                 <path
                   d="M5 12.5l4.5 4.5L19 7"
@@ -246,11 +325,11 @@ export function ThemeEditor({
               Saved
             </span>
           ) : saveState === "error" ? (
-            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
+            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-600 dark:text-red-300">
               Save failed — try again
             </span>
           ) : (
-            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-500">
+            <span className="inline-flex animate-fade-in items-center gap-2 rounded-full border border-edge bg-surface-2/60 px-3 py-1 text-xs text-muted">
               Changes save automatically.
             </span>
           )}
@@ -259,7 +338,7 @@ export function ThemeEditor({
 
       {/* Live preview */}
       <aside className="self-start lg:sticky lg:top-20">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
           Live preview
         </h2>
         <PhonePreview

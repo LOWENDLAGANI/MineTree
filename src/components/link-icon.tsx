@@ -79,11 +79,11 @@ export function IconPickerGrid({
           title={name.replace("_", " ")}
           className={
             value === name
-              ? "flex h-9 w-9 items-center justify-center rounded-lg border-2 border-emerald-600 bg-emerald-50"
-              : "flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50"
+              ? "flex h-10 w-10 items-center justify-center rounded-lg border-2 border-brand bg-brand/10 transition-transform active:scale-90"
+              : "flex h-10 w-10 items-center justify-center rounded-lg border border-edge bg-surface transition-colors hover:border-faint hover:bg-surface-2 active:scale-90"
           }
         >
-          <LinkIcon name={name} color={value === name ? "#059669" : "#52525b"} />
+          <LinkIcon name={name} color={value === name ? "#10b981" : "#a1a1aa"} />
         </button>
       ))}
     </div>

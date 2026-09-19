@@ -77,6 +77,7 @@ export async function createLink(formData: FormData): Promise<ActionResult> {
   const title = String(formData.get("title") ?? "").trim().slice(0, 120);
   const url = normalizeUrl(String(formData.get("url") ?? ""));
   const icon = String(formData.get("icon") ?? "link").slice(0, 32);
+  const displayMode = String(formData.get("display_mode") ?? "classic") === "featured" ? "featured" : "classic";
 
   if (!title || !isValidUrl(url)) {
     return { ok: false, message: "Check the title and URL, then try again." };
@@ -97,6 +98,7 @@ export async function createLink(formData: FormData): Promise<ActionResult> {
     title,
     url,
     icon,
+    display_mode: displayMode,
     position: nextPosition,
     is_active: true,
   });
@@ -121,15 +123,31 @@ export async function updateLink(formData: FormData): Promise<ActionResult> {
   const title = String(formData.get("title") ?? "").trim().slice(0, 120);
   const url = normalizeUrl(String(formData.get("url") ?? ""));
   const icon = String(formData.get("icon") ?? "link").slice(0, 32);
+  const displayMode = String(formData.get("display_mode") ?? "classic") === "featured" ? "featured" : "classic";
   const isActive = String(formData.get("is_active") ?? "") === "on" || String(formData.get("is_active") ?? "") === "true";
 
   if (!id || !title || !isValidUrl(url)) {
     return { ok: false, message: "Check the title and URL, then try again." };
   }
 
+  // Preserve the existing thumbnail unless the request explicitly clears it.
+  const clearThumb = String(formData.get("clear_thumbnail") ?? "") === "1";
+  let thumbnailUrl: string | null | undefined = undefined;
+  if (clearThumb) {
+    thumbnailUrl = null;
+  } else {
+    const { data: existing } = await supabase
+      .from("links")
+      .select("thumbnail_url")
+      .eq("id", id)
+      .eq("profile_id", profileId)
+      .single();
+    thumbnailUrl = existing?.thumbnail_url ?? null;
+  }
+
   const { error } = await supabase
     .from("links")
-    .update({ title, url, icon, is_active: isActive })
+    .update({ title, url, icon, display_mode: displayMode, is_active: isActive, thumbnail_url: thumbnailUrl })
     .eq("id", id)
     .eq("profile_id", profileId);
 
@@ -231,10 +249,16 @@ export async function saveProfile(formData: FormData) {
   const display_name = String(formData.get("display_name") ?? "").trim().slice(0, 80);
   const bio = String(formData.get("bio") ?? "").trim().slice(0, 400);
   const rawUsername = slugifyUsername(String(formData.get("username") ?? ""));
-  const rawAvatarUrl = String(formData.get("avatar_url") ?? "").trim();
-  // Avatar URLs must be https and come from the storage host — stored in an
-  // <Image src>, and Next.js only whitelists *.supabase.co anyway.
-  const avatar_url = /^https:\/\/[^/]*supabase\.co\//.test(rawAvatarUrl) ? rawAvatarUrl : null;
+
+  // BUGFIX: this form has no avatar_url field, so a naive update wiped the
+  // stored avatar every time the user saved their profile. Read the current
+  // value and preserve it — only uploadAvatar is allowed to change it.
+  const { data: currentProfile } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", user.id)
+    .single();
+  const avatar_url = currentProfile?.avatar_url ?? null;
 
   if (rawUsername.length < 3 || !USERNAME_RE.test(rawUsername) || RESERVED_USERNAMES.has(rawUsername)) {
     redirect("/dashboard/settings?error=username");
@@ -276,6 +300,9 @@ export async function saveTheme(theme: {
   background?: string;
   buttonStyle?: string;
   font?: string;
+  cornerStyle?: string;
+  avatarShape?: string;
+  hideBranding?: boolean;
 }): Promise<ActionResult> {
   const supabase = await createClient();
   const user = await getUserOrNull();
@@ -289,6 +316,13 @@ export async function saveTheme(theme: {
       ? theme.buttonStyle
       : undefined,
     font: ["sans", "serif", "mono"].includes(theme.font ?? "") ? theme.font : undefined,
+    cornerStyle: ["rounded", "pill", "square"].includes(theme.cornerStyle ?? "")
+      ? theme.cornerStyle
+      : undefined,
+    avatarShape: ["circle", "squircle", "square"].includes(theme.avatarShape ?? "")
+      ? theme.avatarShape
+      : undefined,
+    hideBranding: theme.hideBranding === true,
   };
 
   const { error } = await supabase
@@ -360,6 +394,71 @@ export async function uploadAvatar(formData: FormData) {
   if (profile) revalidatePath(`/${profile.username}`);
   revalidatePath("/dashboard/settings");
   redirect("/dashboard/settings?saved=1");
+}
+
+// ---------------------------------------------------------------------------
+// Link thumbnail upload → Supabase Storage (path: thumbnails/<uid>/<linkId>.<ext>)
+// Used by the "Featured" display mode to show a big image on the public page.
+// ---------------------------------------------------------------------------
+
+const ALLOWED_THUMB_MIME = new Set(["image/png", "image/jpeg", "image/webp"]);
+
+export async function uploadLinkThumbnail(formData: FormData): Promise<ActionResult> {
+  const profileId = await myProfileId();
+  const supabase = await createClient();
+
+  const linkId = String(formData.get("id") ?? "");
+  const file = formData.get("file");
+  if (!linkId) return { ok: false, message: "Missing link id." };
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "Choose an image first." };
+  }
+  if (file.size > 3 * 1024 * 1024) {
+    return { ok: false, message: "Image is too large — 3 MB max." };
+  }
+  if (!ALLOWED_THUMB_MIME.has(file.type)) {
+    return { ok: false, message: "Only PNG, JPEG or WebP images are allowed." };
+  }
+
+  // Verify the link belongs to this profile before writing storage.
+  const { data: link } = await supabase
+    .from("links")
+    .select("id")
+    .eq("id", linkId)
+    .eq("profile_id", profileId)
+    .single();
+  if (!link) return { ok: false, message: "Link not found." };
+
+  const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+  const path = `${profileId}/${linkId}.${ext}`;
+
+  const { error: upErr } = await supabase.storage
+    .from("thumbnails")
+    .upload(path, file, { upsert: true, contentType: file.type });
+  if (upErr) {
+    console.error("[uploadLinkThumbnail]", upErr.message);
+    return { ok: false, message: "Upload failed — check that the 'thumbnails' storage bucket exists and is public." };
+  }
+
+  const { data } = supabase.storage.from("thumbnails").getPublicUrl(path);
+  const publicUrl = data.publicUrl;
+
+  const { error: updateErr } = await supabase
+    .from("links")
+    .update({ thumbnail_url: publicUrl })
+    .eq("id", linkId)
+    .eq("profile_id", profileId);
+
+  if (updateErr) return { ok: false, message: "Couldn't attach the image — try again." };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", profileId)
+    .single();
+  if (profile) await revalidatePublicPage(profile.username);
+
+  return { ok: true, message: "Thumbnail updated." };
 }
 
 // ---------------------------------------------------------------------------

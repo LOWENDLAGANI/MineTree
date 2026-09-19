@@ -11,17 +11,18 @@ export const Switch = React.forwardRef<
   <SwitchPrimitives.Root
     ref={ref}
     className={cn(
-      "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full",
+      // 24×44px = comfortable 44px-tall touch target band on mobile
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer touch-manipulation items-center rounded-full",
       "transition-colors",
-      "data-[state=checked]:bg-emerald-600 data-[state=unchecked]:bg-zinc-700",
+      "data-[state=checked]:bg-brand data-[state=unchecked]:bg-edge",
       className,
     )}
     {...props}
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "pointer-events-none block h-4 w-4 rounded-full bg-white transition-transform",
-        "data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
+        "pointer-events-none block h-5 w-5 rounded-full bg-white shadow transition-transform",
+        "data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0.5",
       )}
     />
   </SwitchPrimitives.Root>

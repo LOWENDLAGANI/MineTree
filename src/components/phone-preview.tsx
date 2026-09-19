@@ -10,6 +10,8 @@ export type LinkRow = {
   icon: string;
   position: number;
   is_active: boolean;
+  display_mode: "classic" | "featured";
+  thumbnail_url: string | null;
   created_at: string;
 };
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { UiThemeProvider, themeInitScript } from "@/components/ui/theme";
 
 export const metadata: Metadata = {
   title: {
@@ -14,8 +15,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className="bg-zinc-950 text-zinc-100 antialiased">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Applies the saved UI mode before first paint — prevents theme flash. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="bg-surface text-body antialiased">
+        <UiThemeProvider>{children}</UiThemeProvider>
+      </body>
     </html>
   );
 }

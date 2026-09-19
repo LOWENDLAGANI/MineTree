@@ -201,12 +201,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             role="status"
             className={cn(
-              "pointer-events-auto flex items-start gap-2.5 rounded-xl border px-3.5 py-3 shadow-lg shadow-black/40 backdrop-blur",
-              "bg-zinc-900/95 text-sm text-zinc-100",
-              t.kind === "success" && "border-emerald-500/40",
+              "pointer-events-auto flex items-start gap-2.5 rounded-xl border bg-surface/95 px-3.5 py-3 text-sm text-body shadow-lg shadow-black/20 backdrop-blur",
+              t.kind === "success" && "border-brand/40",
               t.kind === "error" && "border-red-500/40",
               t.kind === "info" && "border-sky-500/40",
-              t.kind === "loading" && "border-emerald-500/40",
+              t.kind === "loading" && "border-brand/40",
               t.leaving ? "animate-toast-out" : "animate-toast-in",
             )}
           >
@@ -218,7 +217,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               type="button"
               onClick={() => beginLeave(t.id)}
               aria-label="Dismiss notification"
-              className="shrink-0 rounded p-0.5 text-zinc-500 transition-colors hover:text-zinc-200"
+              className="shrink-0 rounded p-0.5 text-faint transition-colors hover:text-body"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />

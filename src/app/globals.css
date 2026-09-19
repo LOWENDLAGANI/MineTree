@@ -12,6 +12,66 @@
 
 html {
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   App theme tokens — light is default; `dark` class on <html> overrides.
+   Components use semantic classes (bg-surface, text-body, etc.) so both
+   modes stay readable without per-component color branches.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-edge: var(--edge);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-on-brand: var(--on-brand);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --color-mine-50: #ecfdf5;
+  --color-mine-100: #d1fae5;
+  --color-mine-500: #10b981;
+  --color-mine-600: #059669;
+  --color-mine-700: #047857;
+}
+
+:root {
+  /* Light mode (default) */
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --edge: #e4e4e7;
+  --body: #18181b;
+  --muted: #52525b;
+  --faint: #a1a1aa;
+  --brand: #10b981;
+  --brand-strong: #059669;
+  --on-brand: #ffffff;
+  color-scheme: light;
+}
+
+html.dark {
+  /* Dark mode */
+  --surface: #101013;
+  --surface-2: #1c1c21;
+  --edge: #2e2e35;
+  --body: #f4f4f5;
+  --muted: #a1a1aa;
+  --faint: #71717a;
+  --brand: #10b981;
+  --brand-strong: #34d399;
+  --on-brand: #052e22;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--surface);
+  color: var(--body);
 }
 
 /* ---------------------------------------------------------------------------
@@ -154,14 +214,14 @@ html {
 .stagger > *:nth-child(7) { animation-delay: 0.33s; }
 .stagger > *:nth-child(8) { animation-delay: 0.38s; }
 
-/* Skeleton loading blocks */
+/* Skeleton loading blocks — theme-aware shimmer */
 .skeleton {
   border-radius: 0.5rem;
   background: linear-gradient(
     90deg,
-    rgb(39 39 42) 25%,
-    rgb(52 52 58) 50%,
-    rgb(39 39 42) 75%
+    var(--surface-2) 25%,
+    var(--edge) 50%,
+    var(--surface-2) 75%
   );
   background-size: 800px 100%;
   animation: shimmer 1.4s linear infinite;

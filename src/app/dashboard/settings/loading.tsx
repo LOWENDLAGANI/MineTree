@@ -6,7 +6,7 @@ export default function SettingsLoading() {
         <div className="skeleton h-4 w-64" />
       </div>
 
-      <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+      <section className="rounded-lg border border-edge bg-surface p-6">
         <div className="skeleton h-5 w-24" />
         <div className="mt-6 flex items-center gap-4">
           <div className="skeleton h-16 w-16 rounded-full" />
@@ -31,7 +31,7 @@ export default function SettingsLoading() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+      <section className="rounded-lg border border-edge bg-surface p-6">
         <div className="skeleton h-5 w-28" />
         <div className="mt-4 flex flex-wrap gap-2">
           {Array.from({ length: 5 }).map((_, i) => (

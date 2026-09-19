@@ -24,7 +24,7 @@ async function getProfileByUsername(username: string) {
 
   const { data: links, error: linksError } = await supabase
     .from("links")
-    .select("id, title, url, icon, position, is_active, created_at")
+    .select("id, title, url, icon, position, is_active, display_mode, thumbnail_url, created_at")
     .eq("profile_id", profile.id)
     .order("position", { ascending: true })
     .order("created_at", { ascending: true });

@@ -12,6 +12,9 @@ export type ThemeConfig = {
   background?: string;
   buttonStyle?: "solid" | "outline" | "soft";
   font?: "sans" | "serif" | "mono";
+  cornerStyle?: "rounded" | "pill" | "square";
+  avatarShape?: "circle" | "squircle" | "square";
+  hideBranding?: boolean;
 };
 
 export type Database = {
@@ -56,6 +59,8 @@ export type Database = {
           icon: string;
           position: number;
           is_active: boolean;
+          display_mode: "classic" | "featured";
+          thumbnail_url: string | null;
           created_at: string;
         };
         Insert: {
@@ -66,6 +71,8 @@ export type Database = {
           icon?: string;
           position?: number;
           is_active?: boolean;
+          display_mode?: "classic" | "featured";
+          thumbnail_url?: string | null;
           created_at?: string;
         };
         Update: {
@@ -76,6 +83,8 @@ export type Database = {
           icon?: string;
           position?: number;
           is_active?: boolean;
+          display_mode?: "classic" | "featured";
+          thumbnail_url?: string | null;
           created_at?: string;
         };
         Relationships: [

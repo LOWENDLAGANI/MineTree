@@ -30,18 +30,18 @@ export default async function ClaimPage({
 
   return (
     <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-lg border border-zinc-800 bg-zinc-900 p-6">
-        <h1 className="text-2xl font-bold">Claim your username</h1>
-        <p className="mt-1 text-sm text-zinc-400">
+      <div className="w-full max-w-md rounded-lg border border-edge bg-surface p-6">
+        <h1 className="text-2xl font-bold text-body">Claim your username</h1>
+        <p className="mt-1 text-sm text-muted">
           Your page will live at{" "}
-          <span className="font-mono text-emerald-400">minetree.app/…</span>
+          <span className="font-mono text-brand-strong">minetree.app/…</span>
         </p>
 
         <form action={claimUsername} className="mt-6 space-y-4">
           <div>
             <Label htmlFor="username">Username</Label>
             <div className="mt-1.5 flex items-center gap-2">
-              <span className="text-sm text-zinc-500">minetree.app/</span>
+              <span className="text-sm text-muted">minetree.app/</span>
               <Input
                 id="username"
                 name="username"

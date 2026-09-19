@@ -2,18 +2,21 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { getMyAnalytics } from "@/lib/analytics";
-import { PhonePreview } from "@/components/phone-preview";
 import { LinkManager, type LinkRow } from "@/components/link-manager";
 import { StatCards } from "@/components/stat-cards";
 import { CopyUrlButton } from "@/components/copy-url-button";
+import { QrButton } from "@/components/qr-button";
+import { MobilePreviewButton } from "@/components/mobile-preview-button";
 import { resolveTheme } from "@/lib/themes";
-import { Button } from "@/components/ui/button";
+import { TreeCard } from "@/components/tree-card";
+import { Greeting } from "@/components/greeting";
 import {
   createLink,
   updateLink,
   toggleLink,
   deleteLink,
   reorderLinksAction,
+  uploadLinkThumbnail,
 } from "./actions";
 
 export const metadata = { title: "Dashboard" };
@@ -28,61 +31,68 @@ export default async function DashboardPage() {
   ]);
 
   if (!profile) {
-    // Trigger bootstrap if the DB trigger has not fired yet (edge case).
     return (
-      <main className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center gap-3">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-700 border-t-emerald-400" />
-        <p className="text-sm text-zinc-400">Setting up your tree…</p>
-      </main>
+      <div className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center gap-3">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-edge border-t-brand" />
+        <p className="text-sm text-muted">Setting up your tree…</p>
+      </div>
     );
   }
 
   const { data: links } = await supabase
     .from("links")
-    .select("id, title, url, icon, position, is_active, created_at")
+    .select("id, title, url, icon, position, is_active, display_mode, thumbnail_url, created_at")
     .eq("profile_id", profile.id)
     .order("position", { ascending: true })
     .order("created_at", { ascending: true });
 
   const theme = resolveTheme(profile.theme_config);
   const publicUrl = `https://minetree.app/${profile.username}`;
-  const activeCount = (links ?? []).filter((l) => l.is_active).length;
+  const clicksByLink: Record<string, number> = Object.fromEntries(
+    analytics.perLink.map((p) => [p.linkId, p.clicks]),
+  );
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto max-w-5xl px-4 py-8 max-sm:pb-28">
+      {/* Greeting + share pill */}
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <div className="animate-fade-in-up">
-          <h1 className="text-2xl font-bold">Your tree</h1>
-          <div className="mt-0.5 flex flex-wrap items-center gap-2 text-sm text-zinc-400">
-            <span>
-              minetree.app/
-              <Link
-                href={`/${profile.username}`}
-                target="_blank"
-                className="font-medium text-emerald-400 transition-colors hover:text-emerald-300 hover:underline"
-              >
-                {profile.username}
-              </Link>
-            </span>
-            <CopyUrlButton url={publicUrl} />
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              </span>
-              {activeCount} live link{activeCount === 1 ? "" : "s"}
-            </span>
-          </div>
+          <Greeting name={profile.display_name || profile.username} />
         </div>
-        <Link href="/dashboard/settings" className="animate-fade-in-up" style={{ animationDelay: "80ms" }}>
-          <Button variant="outline" size="sm" className="transition-transform active:scale-95">
-            Customize
-          </Button>
-        </Link>
+        <div className="flex animate-fade-in-up items-center gap-2" style={{ animationDelay: "60ms" }}>
+          <span className="hidden items-center gap-2 rounded-full border border-edge bg-surface-2 px-3.5 py-2 text-sm text-muted sm:inline-flex">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-brand">
+              <path
+                d="M12 3c4.5 0 8 2.5 8 5.5 0 2.2-1.9 4.1-4.6 5M12 3C7.5 3 4 5.5 4 8.5c0 2.2 1.9 4.1 4.6 5M8 21l4-7 4 7"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            minetree.app/{profile.username}
+          </span>
+          <CopyUrlButton url={publicUrl} />
+          <QrButton url={publicUrl} />
+        </div>
       </div>
 
-      {/* Stats */}
-      <section className="mb-8" aria-label="Analytics summary">
+      {/* Your tree — big branded card */}
+      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: "120ms" }} aria-label="Your tree">
+        <h2 className="mb-3 text-xl font-bold text-body">Your MineTree</h2>
+        <TreeCard
+          username={profile.username}
+          displayName={profile.display_name}
+          avatarUrl={profile.avatar_url}
+          publicUrl={publicUrl}
+          linkCount={(links ?? []).length}
+          themeAccent={theme.accent}
+        />
+      </section>
+
+      {/* Weekly stats */}
+      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: "180ms" }} aria-label="Analytics summary">
+        <h2 className="mb-3 text-xl font-bold text-body">In the last week</h2>
         <StatCards
           views7={analytics.views7}
           views30={analytics.views30}
@@ -91,39 +101,23 @@ export default async function DashboardPage() {
         />
       </section>
 
-      {/* Editor + preview */}
-      <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-        <section className="animate-fade-in-up" style={{ animationDelay: "150ms" }}>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
-            Links
-          </h2>
-          <LinkManager
-            initialLinks={(links ?? []) as LinkRow[]}
-            createLinkAction={createLink}
-            updateLinkAction={updateLink}
-            toggleLinkAction={toggleLink}
-            deleteLinkAction={deleteLink}
-            reorderAction={reorderLinksAction}
-          />
-        </section>
+      {/* Links editor */}
+      <section className="animate-fade-in-up" style={{ animationDelay: "240ms" }}>
+        <h2 className="mb-3 text-xl font-bold text-body">Links</h2>
+        <LinkManager
+          initialLinks={(links ?? []) as LinkRow[]}
+          clicksByLink={clicksByLink}
+          clicksDailyByLink={analytics.perLinkDaily}
+          createLinkAction={createLink}
+          updateLinkAction={updateLink}
+          toggleLinkAction={toggleLink}
+          deleteLinkAction={deleteLink}
+          reorderAction={reorderLinksAction}
+          uploadThumbnailAction={uploadLinkThumbnail}
+        />
+      </section>
 
-        <aside
-          className="animate-fade-in-up self-start lg:sticky lg:top-20"
-          style={{ animationDelay: "220ms" }}
-        >
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
-            Live preview
-          </h2>
-          <PhonePreview
-            username={profile.username}
-            displayName={profile.display_name}
-            bio={profile.bio}
-            avatarUrl={profile.avatar_url}
-            links={(links ?? []) as LinkRow[]}
-            theme={theme}
-          />
-        </aside>
-      </div>
-    </main>
+      <MobilePreviewButton />
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export default function DashboardLoading() {
       {/* Stats */}
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+          <div key={i} className="rounded-lg border border-edge bg-surface p-4">
             <div className="skeleton h-3 w-20" />
             <div className="skeleton mt-2 h-7 w-16" />
           </div>
@@ -29,7 +29,7 @@ export default function DashboardLoading() {
           ))}
         </div>
         <div className="hidden lg:block">
-          <div className="mx-auto w-[300px] space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900 p-4">
+          <div className="mx-auto w-[300px] space-y-3 rounded-2xl border border-edge bg-surface p-4">
             <div className="skeleton mx-auto h-20 w-20 rounded-full" />
             <div className="skeleton mx-auto h-4 w-28" />
             <div className="skeleton h-3 w-full" />

@@ -6,8 +6,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentPro
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-[80px] w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100",
-        "placeholder:text-zinc-500",
+        "flex min-h-[80px] w-full rounded-lg border border-edge bg-surface px-3 py-2 text-sm text-body",
+        "placeholder:text-faint",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}

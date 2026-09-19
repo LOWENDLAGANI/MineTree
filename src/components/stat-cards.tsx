@@ -48,8 +48,8 @@ function StatCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 p-4",
-        "transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/5",
+        "group relative overflow-hidden rounded-xl border border-edge bg-surface p-4",
+        "transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg hover:shadow-brand/5",
         mounted ? "animate-fade-in-up" : "opacity-0",
       )}
       style={{ animationDelay: `${delay}ms` }}
@@ -57,13 +57,13 @@ function StatCard({
       {/* subtle accent wash on hover */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full bg-emerald-500/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full bg-brand/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
       />
-      <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">{label}</p>
-      <p className="mt-1 text-2xl font-bold tabular-nums text-white">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted">{label}</p>
+      <p className="mt-1 text-2xl font-bold tabular-nums text-body">
         {displayed.toLocaleString()}
       </p>
-      {hint ? <p className="mt-0.5 text-[11px] text-zinc-600">{hint}</p> : null}
+      {hint ? <p className="mt-0.5 text-[11px] text-faint">{hint}</p> : null}
     </div>
   );
 }
