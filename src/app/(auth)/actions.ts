@@ -4,12 +4,17 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { safeInternalPath } from "@/lib/safe-redirect";
+import { getSiteUrl } from "@/lib/site-url";
 
 async function origin() {
   const h = await headers();
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const host = h.get("host") ?? "localhost:3000";
-  return `${proto}://${host}`;
+  // On Vercel, x-forwarded-host carries the real visitor-facing host
+  // (x-forwarded-host wins so preview deployments get their own URL).
+  const forwardedHost =
+    h.get("x-forwarded-host") ?? h.get("host") ?? new URL(getSiteUrl()).host;
+  const proto =
+    h.get("x-forwarded-proto") ?? (forwardedHost.includes("localhost") ? "http" : "https");
+  return `${proto}://${forwardedHost}`;
 }
 
 export async function submitSignup(formData: FormData) {

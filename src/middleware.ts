@@ -13,6 +13,6 @@ export const config = {
      * - favicon, icons, manifests
      * - /api/click (fire-and-forget beacon, must never wait on auth refresh)
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|manifest.webmanifest|api/click).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml|manifest.webmanifest|api/click).*)",
   ],
 };

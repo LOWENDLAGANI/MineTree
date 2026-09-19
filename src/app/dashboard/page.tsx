@@ -8,6 +8,7 @@ import { CopyUrlButton } from "@/components/copy-url-button";
 import { QrButton } from "@/components/qr-button";
 import { MobilePreviewButton } from "@/components/mobile-preview-button";
 import { resolveTheme } from "@/lib/themes";
+import { getSiteUrl } from "@/lib/site-url";
 import { TreeCard } from "@/components/tree-card";
 import { Greeting } from "@/components/greeting";
 import {
@@ -47,7 +48,7 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: true });
 
   const theme = resolveTheme(profile.theme_config);
-  const publicUrl = `https://minetree.app/${profile.username}`;
+  const publicUrl = `${getSiteUrl()}/${profile.username}`;
   const clicksByLink: Record<string, number> = Object.fromEntries(
     analytics.perLink.map((p) => [p.linkId, p.clicks]),
   );
@@ -70,7 +71,7 @@ export default async function DashboardPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            minetree.app/{profile.username}
+            {new URL(publicUrl).host}/{profile.username}
           </span>
           <CopyUrlButton url={publicUrl} />
           <QrButton url={publicUrl} />

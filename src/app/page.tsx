@@ -15,9 +15,9 @@ export default async function RootPage() {
       <div className="w-full">
         <header className="text-center">
           <h1 className="text-2xl font-bold">MineTree</h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            Your links, one page. Ad-free.
-          </p>
+        <p className="mt-1 text-sm text-muted">
+          Your links, one page. Ad-free.
+        </p>
         </header>
 
         <div className="mt-8 space-y-3">
@@ -31,7 +31,7 @@ export default async function RootPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-center text-xs text-zinc-500">
+        <p className="mt-8 text-center text-xs text-faint">
           Free. No ads, no tracking.
         </p>
       </div>

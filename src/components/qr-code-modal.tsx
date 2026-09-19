@@ -62,7 +62,7 @@ export function QrCodeModal({ url, open, onClose }: { url: string; open: boolean
             </svg>
           </button>
         </div>
-        <p className="mb-4 text-xs text-muted">Scan to open minetree.app</p>
+        <p className="mb-4 text-xs text-muted">Scan to open your MineTree page</p>
 
         <div
           ref={wrapRef}

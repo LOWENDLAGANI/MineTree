@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { UiThemeProvider, themeInitScript } from "@/components/ui/theme";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
+  // Required so OpenGraph/Twitter URLs resolve absolutely in production.
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "MineTree — one page for everything you are",
     template: "%s · MineTree",
   },
   description:
     "MineTree is the ad-free link-in-bio platform. One sleek page for every link you share.",
+  openGraph: {
+    siteName: "MineTree",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

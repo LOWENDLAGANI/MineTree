@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { claimUsername } from "../actions";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata = { title: "Claim your username" };
 
@@ -19,6 +20,7 @@ export default async function ClaimPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  const host = new URL(getSiteUrl()).host;
   const user = await requireUser();
   const supabase = await createClient();
 
@@ -34,14 +36,14 @@ export default async function ClaimPage({
         <h1 className="text-2xl font-bold text-body">Claim your username</h1>
         <p className="mt-1 text-sm text-muted">
           Your page will live at{" "}
-          <span className="font-mono text-brand-strong">minetree.app/…</span>
+          <span className="font-mono text-brand-strong">{host}/…</span>
         </p>
 
         <form action={claimUsername} className="mt-6 space-y-4">
           <div>
             <Label htmlFor="username">Username</Label>
             <div className="mt-1.5 flex items-center gap-2">
-              <span className="text-sm text-muted">minetree.app/</span>
+              <span className="text-sm text-muted">{host}/</span>
               <Input
                 id="username"
                 name="username"
