@@ -218,12 +218,11 @@ export function TreeContent({
         )}
       </div>
 
-      {/* Footer — hideable by the creator */}
-      {theme.hideBranding ? null : (
-        <a
-          href="/"
-          className="mt-14 inline-flex items-center gap-1.5 text-xs opacity-50 transition-opacity hover:opacity-90"
-        >
+      {/* Footer */}
+      <a
+        href="/"
+        className="mt-14 inline-flex items-center gap-1.5 text-xs opacity-50 transition-opacity hover:opacity-90"
+      >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M12 3c4.5 0 8 2.5 8 5.5 0 2.2-1.9 4.1-4.6 5M12 3C7.5 3 4 5.5 4 8.5c0 2.2 1.9 4.1 4.6 5M8 21l4-7 4 7"
@@ -234,8 +233,7 @@ export function TreeContent({
             />
           </svg>
           MineTree
-        </a>
-      )}
+      </a>
     </div>
   );
 }

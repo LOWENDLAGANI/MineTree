@@ -14,7 +14,6 @@ export type ThemeConfig = {
   font?: "sans" | "serif" | "mono";
   cornerStyle?: "rounded" | "pill" | "square";
   avatarShape?: "circle" | "squircle" | "square";
-  hideBranding?: boolean;
 };
 
 export type Database = {

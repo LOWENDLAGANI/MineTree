@@ -13,7 +13,6 @@ export type ResolvedTheme = {
   fontFamily: string;
   cornerStyle: NonNullable<ThemeConfig["cornerStyle"]>;
   avatarShape: NonNullable<ThemeConfig["avatarShape"]>;
-  hideBranding: boolean;
 };
 
 export const CORNER_RADII: Record<NonNullable<ThemeConfig["cornerStyle"]>, string> = {
@@ -38,7 +37,6 @@ export const THEME_PRESETS: Record<
     | "fontFamily"
     | "cornerStyle"
     | "avatarShape"
-    | "hideBranding"
   >
 > = {
   mint: {
@@ -101,7 +99,6 @@ export function resolveTheme(config: Json | null | undefined): ResolvedTheme {
     font: typeof raw.font === "string" ? (raw.font as ThemeConfig["font"]) : undefined,
     cornerStyle: typeof raw.cornerStyle === "string" ? (raw.cornerStyle as ThemeConfig["cornerStyle"]) : undefined,
     avatarShape: typeof raw.avatarShape === "string" ? (raw.avatarShape as ThemeConfig["avatarShape"]) : undefined,
-    hideBranding: raw.hideBranding === true,
   };
   const presetKey = cfg.preset && cfg.preset in THEME_PRESETS ? cfg.preset : "mint";
   const base = THEME_PRESETS[presetKey];
@@ -116,6 +113,5 @@ export function resolveTheme(config: Json | null | undefined): ResolvedTheme {
     fontFamily: FONT_STACKS[cfg.font ?? "sans"],
     cornerStyle: cfg.cornerStyle ?? "rounded",
     avatarShape: cfg.avatarShape ?? "circle",
-    hideBranding: cfg.hideBranding ?? false,
   };
 }

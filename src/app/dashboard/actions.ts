@@ -302,7 +302,6 @@ export async function saveTheme(theme: {
   font?: string;
   cornerStyle?: string;
   avatarShape?: string;
-  hideBranding?: boolean;
 }): Promise<ActionResult> {
   const supabase = await createClient();
   const user = await getUserOrNull();
@@ -322,7 +321,6 @@ export async function saveTheme(theme: {
     avatarShape: ["circle", "squircle", "square"].includes(theme.avatarShape ?? "")
       ? theme.avatarShape
       : undefined,
-    hideBranding: theme.hideBranding === true,
   };
 
   const { error } = await supabase

@@ -18,7 +18,6 @@ type ThemeDraft = {
   font?: ThemeConfig["font"];
   cornerStyle?: ThemeConfig["cornerStyle"];
   avatarShape?: ThemeConfig["avatarShape"];
-  hideBranding?: boolean;
 };
 
 const PRESET_CARDS: { key: NonNullable<ThemeConfig["preset"]>; name: string; swatch: string }[] = [
@@ -281,23 +280,6 @@ export function ThemeEditor({
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Hide branding */}
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-edge bg-surface-2/60 p-4">
-          <div>
-            <Label htmlFor="hide-branding" className="cursor-pointer">
-              Hide “MineTree” footer
-            </Label>
-            <p className="mt-0.5 text-xs text-muted">
-              Remove the branding link from the bottom of your public page.
-            </p>
-          </div>
-          <Switch
-            id="hide-branding"
-            checked={draft.hideBranding ?? false}
-            onCheckedChange={(v) => patch({ hideBranding: v })}
-          />
         </div>
 
         {/* Save status pill */}
